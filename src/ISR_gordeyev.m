@@ -7,8 +7,7 @@
 %   mode        - 模式控制(关: 0; 开: 1)
 %   theomode    - 理论谱计算模式(Mac: 1; KM: 2)
 % Outputs:
-%   Je          - 电子项Gordeyev积分 complex
-%   Ji          - 离子项Gordeyev积分 complex
+%   parameters  - 计算过程产生的中间变量 struct
 %%----------------------------------------------------------------------%%
 %参考文献
 % [1] Dougherty, J. P. and Farley, D. T. (1963). A Theory of Incoherent
@@ -23,7 +22,7 @@
 % date: 2019/10/30
 %%----------------------------------------------------------------------%%
 
-function [Je,Ji] = ISR_gordeyev(parameters, mode, theomode)
+function parameters = ISR_gordeyev(parameters, mode, theomode)
 
 thetae = parameters.dimensionless.thetae;
 psien  = parameters.dimensionless.psien;
@@ -41,6 +40,9 @@ if mode(3) == 0 && theomode == 2
         Ji(irow,:) = sqrt(pi)*fadf(-(thetai(irow,:) - 1i*psiin(irow)));
     end
     
+    parameters.spectrum.Je = Je;
+    parameters.spectrum.Ji = Ji;
+    
 	return
 end
 
@@ -56,36 +58,28 @@ alpha = parameters.factors.alpha*pi/180;
 phie  = parameters.dimensionless.phie;
 phii  = parameters.dimensionless.phii;
     
-if theomode == 1
-
+if theomode == 1 % K&M
     psiec_para = parameters.dimensionless.psiec_par;
     psiec_perp = parameters.dimensionless.psiec_perp;
-    psiic = parameters.dimensionless.psiic;
-
-    funPare = [psien, phie, alpha, psiec_para, psiec_perp];
-    [Ge,~,~] = SommerfeldIntegral(func,a,b,N,thetae,funPare,restriction); %[2] eq(18)
-    Je = Ge./(1 - psien*Ge); %[2] eq(20)
-
-    Ji = complex(zeros(size(thetai)));
-    for ini=1:size(thetai,1)
-        funPari = [psiin(ini), phii, alpha, psiic(ini), psiic(ini)];
-        Gi = SommerfeldIntegral(func,a,b,N,thetai(ini,:),funPari,restriction); %[2] eq(18)
-        Ji(ini,:) = Gi./(1 - psiin(ini)*Gi); %[2] eq(20)
-    end
-    
-elseif theomode == 2
-    
-    funPare = [psien, phie, alpha, 0, 0];
-    [Je,~,~] = SommerfeldIntegral(func,a,b,N,thetae,funPare,restriction);
-
-    Ji = complex(zeros(size(thetai)));
-    for ini=1:size(thetai,1)
-        funPari = [psiin(ini), phii, alpha, 0, 0];
-        Ji(ini,:) = SommerfeldIntegral(func,a,b,N,thetai(ini,:),funPari,restriction);
-    end
-    
+    psiic      = parameters.dimensionless.psiic;
+elseif theomode == 2 % Mac
+    psiec_para = 0;
+    psiec_perp = 0;
+    psiic      = 0;
 else
     error('参数 theomode 设置错误!')
 end
+
+funPare = [psien, phie, alpha, psiec_para, psiec_perp];
+[Je,~,~] = SommerfeldIntegral(func,a,b,N,thetae,funPare,restriction); %[2] eq(18)
+
+Ji = complex(zeros(size(thetai)));
+for ini=1:size(thetai,1)
+    funPari = [psiin(ini), phii, alpha, psiic(ini), psiic(ini)];
+    Ji(ini,:) = SommerfeldIntegral(func,a,b,N,thetai(ini,:),funPari,restriction); %[2] eq(18)
+end
+
+parameters.spectrum.Je = Je;
+parameters.spectrum.Ji = Ji;
 
 end

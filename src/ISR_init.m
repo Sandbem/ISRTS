@@ -103,4 +103,13 @@ parameters.dimensionless.phii       = [];   % 离子无量纲回旋频率
 parameters.dimensionless.psiic      = [];   % 离子无量纲库仑碰撞频率
 % parameters.dimensionless.Hi         = [];   % 离子无量纲
 
+%% 理论谱参量
+parameters.spectrum = struct;
+
+parameters.spectrum.Je    = [];             % 电子Gordeyev积分
+parameters.spectrum.spece = [];             % 电子散射谱
+
+parameters.spectrum.Ji    = [];             % 离子Gordeyev积分
+parameters.spectrum.speci = [];             % 离子散射谱
+
 end

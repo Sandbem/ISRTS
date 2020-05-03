@@ -3,8 +3,6 @@
 
 clear;
 
-addpath('./src')
-
 ion = {'O+', 'NO+'};
 ne = 5e10;
 Ti = 1000;
@@ -22,7 +20,7 @@ factors.ud = [0, 0];
 factors.nu = [0, 5000, 5000];
 factors.B = [3.5e-5, 60];
 factors.mode = [0, 1, 0, 0];
-factors.theomode = 1;
+factors.theomode = 2;
 
 [spec,parameters]=ISR_main(ion,ne,Ti,Tr,percent,frequency,fradar,theta,factors);
 

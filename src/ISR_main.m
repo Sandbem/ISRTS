@@ -54,40 +54,13 @@ parameters = ISR_updatePlasmas(parameters);
 parameters = ISR_updateDimensionless(parameters);
 
 %% Gordeyev积分
-[Je,Ji] = ISR_gordeyev(parameters, mode, theomode);
-
-%% 积分及理论谱所需参量
-k   = parameters.radar.k;
-ni  = parameters.plasmas.ni;
-vTe = parameters.plasmas.vTe;
-vTi = parameters.plasmas.vTi;
-he  = parameters.plasmas.he;
+parameters = ISR_gordeyev(parameters, mode, theomode);
 
 %% 理论谱
 if theomode == 1 % K&M
-    
-    thetae = parameters.dimensionless.thetae;
-    thetai = parameters.dimensionless.thetai;
-    
-    hi   = parameters.plasmas.hi;
-    
-    spec = ISR_spectrumKM(Je,Ji,thetae,thetai,k,ne,ni,vTe,vTi,he,hi);
- 
+    [spec,parameters] = ISR_spectrumKM(parameters);
 elseif theomode == 2 % Mac
-    
-    qi     = parameters.plasmas.qi;
-    qe     = parameters.plasmas.qe;
-    omegae = parameters.plasmas.omegae;
-    omegai = parameters.plasmas.omegai;
-    
-    psien  = parameters.dimensionless.psien;
-    psiin  = parameters.dimensionless.psiin;
-    
-    eta = ni.*qi.^2/(ne*qe^2);
-    mu  = eta*Tr;
-
-    spec = ISR_spectrumMac(Je,Ji,omegae,omegai,k,ne,he,eta,mu,vTe,vTi,psien,psiin);
-    
+    [spec,parameters] = ISR_spectrumMac(parameters);
 end
 
 end

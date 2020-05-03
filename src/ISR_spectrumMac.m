@@ -3,21 +3,10 @@
 % Needs: fadf.m
 %%----------------------------------------------------------------------%%
 % Inputs:
-%   Je          - 电子归一化Gordeyev积分
-%   Ji          - 离子归一化Gordeyev积分
-%   omge        - 电子多普勒频移 [rad*Hz]
-%   omgi        - 离子多普勒频移 [rad*Hz]
-%   k           - 散射差矢 [m^-1]
-%   ne          - 电子数密度 [m^-3]
-%   he          - 电子德拜半径 [m]
-%   eta         - 与离子带电量相关系数
-%   mu          - eta * Tr
-%   vTe         - 电子热速度 [m/s]
-%   vTi         - 离子热速度 [m/s]
-%   psien       - 电子-中性归一化碰撞频率
-%   psiin       - 离子-中性归一化碰撞频率
+%   parameters  - 计算过程产生的中间变量 struct
 % Outputs:
 %   sigma       - 微分散射截面 [s/m]
+%   parameters  - 计算过程产生的中间变量 struct
 %%----------------------------------------------------------------------%%
 %参考文献
 % [1] Swartz, W. E. & Farley, D. T. (1979). Theory of Incoherent-Scattering
@@ -32,14 +21,39 @@
 % author: Washy[IGG]
 % date: 2019/10/10
 %%----------------------------------------------------------------------%%
+%%更新内容[Washy 2020/05/03]
+% 1. 更改输入: parameters
+% 2. 增加输出: parameters
+%%----------------------------------------------------------------------%%
 
-function sigma = ISR_spectrumMac(Je,Ji,omge,omgi,k,ne,he,eta,mu,vTe,vTi,psien,psiin)
+function [sigma,parameters] = ISR_spectrumMac(parameters)
+
+k    = parameters.radar.k;
+qe   = parameters.plasmas.qe;
+ne   = parameters.plasmas.ne;
+Te   = parameters.plasmas.Te;
+vTe  = parameters.plasmas.vTe;
+he   = parameters.plasmas.he;
+omge = parameters.plasmas.omegae;
+qi   = parameters.plasmas.qi;
+ni   = parameters.plasmas.ni;
+Ti   = parameters.plasmas.Ti;
+vTi  = parameters.plasmas.vTi;
+% hi   = parameters.plasmas.hi;
+omgi = parameters.plasmas.omegai;
+thee = parameters.dimensionless.thetae;
+psien= parameters.dimensionless.psien;
+thei = parameters.dimensionless.thetai;
+psiin= parameters.dimensionless.psiin;
+Je   = parameters.spectrum.Je;
+Ji   = parameters.spectrum.Ji;
+
+eta  = ni.*qi.^2/(ne*qe^2);
+mu   = eta*Te/Ti;
 
 % 经典电子半径re的平方re2
 re2 = 7.940478951426530e-30; % e^2/(4*pi*eps0*me*c^2)
 
-% 电子归一化自变量
-thee = omge/(k*vTe); % [2] eq(7)
 % 电子归一化导纳
 ye = (1i+(thee-1i*psien).*Je)./(1-psien*Je); % [2] eq(5)
 % 热运动引起的电子项散射谱
@@ -52,8 +66,6 @@ specTi = zeros(1, column);
 muyi   = complex(zeros(1, column));
 
 for irow = 1:row
-    % 离子归一化自变量
-    thei = omgi/(k*vTi(irow)); % [2] eq(7)
     % 离子归一化导纳
     yi = (1i+(thei-1i*psiin(irow)).*Ji(irow,:))./(1-psiin(irow)*Ji(irow,:)); % [2] eq(5)
     
@@ -62,10 +74,10 @@ for irow = 1:row
 end
 
 den   = abs(ye+muyi+1i*k^2*he^2).^2;
-spece = abs(muyi+1i*k^2*he^2).^2./den.*specTe;
-speci = abs(ye).^2./den.*specTi;
+parameters.spectrum.spece = abs(muyi+1i*k^2*he^2).^2./den.*specTe;
+parameters.spectrum.speci = abs(ye).^2./den.*specTi;
 % sigma = ne*re2*(spece + speci); % [1] eq(20)
-sigma = 2*pi*(spece + speci); % [1] eq(20)
+sigma = 2*pi*(parameters.spectrum.spece + parameters.spectrum.speci); % [1] eq(20)
 
 end
 

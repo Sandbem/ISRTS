@@ -8,12 +8,10 @@
 %   omega       - 频域范围
 %   funcPar     - 被积函数自变量
 %   restriction - 约束条件
-%       eps1    - f(b)必须小于该值 [小量]
-%       eps2    - f'(b)必须小于该值 [小量]
+%       epsFuncb- f(b)必须小于该值 [小量]
 %       bm      - 最大积分上限
 %       del     - 两次积分结果的差值平方必须小于该值 [小量]
 %       Nm      - 最大分段个数，用于防止占用内存过大
-%       dif     - f(t)相邻数值差值必须小于该值，用于判断分段个数是否足够
 % Output:
 %   I           - 积分结果
 %   b           - 积分上限 [输出值]
@@ -34,7 +32,7 @@
 
 function [I,b,N] = SommerfeldIntegral(func,a,b,N,omega,funPar,restriction)
 
-% restriction = [1e-9,1e-6,1e3,1e-6,512,0.2];
+% restriction = [1e-9,512,1e-6,32768];
 
 epsFuncb = restriction(1); % f(b) < eps1
 bm   = restriction(2);
