@@ -67,7 +67,7 @@ muyi   = complex(zeros(1, column));
 
 for irow = 1:row
     % 离子归一化导纳
-    yi = (1i+(thei-1i*psiin(irow)).*Ji(irow,:))./(1-psiin(irow)*Ji(irow,:)); % [2] eq(5)
+    yi = (1i+(thei(irow,:)-1i*psiin(irow)).*Ji(irow,:))./(1-psiin(irow)*Ji(irow,:)); % [2] eq(5)
     
     specTi = specTi + computeSpecT(yi,omgi,psiin(irow),k,vTi(irow),eta(irow));
     muyi   = muyi + mu(irow)*yi;
