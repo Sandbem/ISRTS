@@ -4,10 +4,11 @@
 %%----------------------------------------------------------------------%%
 % Inputs:
 %   parameters  - 计算过程产生的中间变量 struct
-%   factors     - 漂移、碰撞、磁场、模式 struct
+%   factors     - 漂移、碰撞、磁场、库仑、模式 struct
 % Outputs:
 %   parameters  - 计算过程产生的中间变量 struct
 %   mode        - 模式控制(关: 0; 开: 1)
+%   gordmode    - Gordeyev积分模式(Sommerfeld: 1; Bessel: 2)
 %   theomode    - 理论谱计算模式(Mac: 1; KM: 2)
 %%----------------------------------------------------------------------%%
 % author: Washy[IGG]
@@ -31,12 +32,12 @@
 %更新内容[Washy 2019/10/10]
 % 1. 增加输出变量: theomode
 %%----------------------------------------------------------------------%%
-%更新内容[Washy 2020/05/01]
+%更新内容[Washy 2020/05/01,08]
 % 1. 去除输入: ion, ne, ni, Te, Ti
-% 2. 去除输出: gordmode
+% 2. 去除输出: gordmode (重新添加05/08)
 %%----------------------------------------------------------------------%%
 
-function [parameters, mode, theomode] = ISR_updateFactors(parameters,factors)
+function [parameters, mode, gordmode, theomode] = ISR_updateFactors(parameters,factors)
 
 leni = length(parameters.plasmas.namei);
 
@@ -106,7 +107,15 @@ else
     
 end
 
-parameters.factors.mode = mode;
+% parameters.factors.mode = mode;
+
+% Gordeyev积分模式选择
+if isfield(factors,'gordmode')
+    validateattributes(factors.gordmode,{'double'},{'scalar','integer','>=',1,'<=',2})
+    gordmode = factors.gordmode;
+else
+    gordmode = 1;
+end
 
 % 理论谱计算公式选择
 if isfield(factors,'theomode')

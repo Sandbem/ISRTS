@@ -1,10 +1,11 @@
 %%INFO: ISR_main.m的子函数，用来计算Gordeyev积分。
 %%----------------------------------------------------------------------%%
-% Needs: fadf.m; ISR_SingleParticleACF.m; SommerfeldIntegral.m; 
+% Needs: fadf.m; gordeyevSommerfeld.m; gordeyevBessel.m; 
 %%----------------------------------------------------------------------%%
 % Input:
 %   parameters  - 计算过程产生的中间变量 struct
 %   mode        - 模式控制(关: 0; 开: 1)
+%   gordmode    - Gordeyev积分模式(Sommerfeld: 1; Bessel: 2)
 %   theomode    - 理论谱计算模式(Mac: 1; KM: 2)
 % Outputs:
 %   parameters  - 计算过程产生的中间变量 struct
@@ -21,8 +22,11 @@
 % author: Washy[IGG]
 % date: 2019/10/30
 %%----------------------------------------------------------------------%%
+%更新内容[Washy 2020/05/08]
+%INFO: 重大更新, 对函数整体进行了重构。
+%%----------------------------------------------------------------------%%
 
-function parameters = ISR_gordeyev(parameters, mode, theomode)
+function parameters = ISR_gordeyev(parameters,mode,gordmode)
 
 thetae = parameters.dimensionless.thetae;
 psien  = parameters.dimensionless.psien;
@@ -31,7 +35,7 @@ thetai = parameters.dimensionless.thetai;
 psiin  = parameters.dimensionless.psiin;
 
 %% 无磁场
-if mode(3) == 0 && theomode == 2
+if mode(3) == 0
     Je = sqrt(pi)*fadf(-(thetae - 1i*psien));
     
     [row, column] = size(thetai);
@@ -48,35 +52,34 @@ end
 
 %% 有磁场
 
-func = @ISR_SingleParticleACF;
-a = 0;
-b = 1;
-N = 32;
-restriction = [1e-9,512,1e-6,32768];
-
-alpha = parameters.factors.alpha*pi/180;
-phie  = parameters.dimensionless.phie;
-phii  = parameters.dimensionless.phii;
+alpha      = parameters.factors.alpha*pi/180;
+phie       = parameters.dimensionless.phie;
+phii       = parameters.dimensionless.phii;
     
-if theomode == 1 % K&M
+if gordmode == 1 % SommerfeldIntegral
+    
     psiec_para = parameters.dimensionless.psiec_par;
     psiec_perp = parameters.dimensionless.psiec_perp;
     psiic      = parameters.dimensionless.psiic;
-elseif theomode == 2 % Mac
-    psiec_para = 0;
-    psiec_perp = 0;
-    psiic      = 0;
+    
+    Je = gordeyevSommerfeld(thetae,psien,alpha,phie,psiec_para,psiec_perp);
+    
+    Ji = complex(zeros(size(thetai)));
+    for ini=1:size(thetai,1)
+        Ji(ini,:) = gordeyevSommerfeld(thetai,psiin(ini),alpha,phii(ini),psiic(ini), psiic(ini));
+    end
+    
+elseif gordmode == 2 % BesselFunction
+    
+    Je = gordeyevBessel(thetae,psien,alpha,phie,128);
+    
+    Ji = complex(zeros(size(thetai)));
+    for ini=1:size(thetai,1)
+        Ji(ini,:) = gordeyevBessel(thetai,psiin(ini),alpha,phii(ini),128);
+    end
+    
 else
-    error('参数 theomode 设置错误!')
-end
-
-funPare = [psien, phie, alpha, psiec_para, psiec_perp];
-[Je,~,~] = SommerfeldIntegral(func,a,b,N,thetae,funPare,restriction); %[2] eq(18)
-
-Ji = complex(zeros(size(thetai)));
-for ini=1:size(thetai,1)
-    funPari = [psiin(ini), phii, alpha, psiic(ini), psiic(ini)];
-    Ji(ini,:) = SommerfeldIntegral(func,a,b,N,thetai(ini,:),funPari,restriction); %[2] eq(18)
+    error('参数 gordmode 设置错误!')
 end
 
 parameters.spectrum.Je = Je;

@@ -51,7 +51,7 @@ parameters.factors.nuii   = [];             % 离子-离子库仑碰撞频率 [Hz]
 parameters.factors.nuei   = [];             % 电子-离子库仑碰撞频率 [Hz]
 parameters.factors.nuee   = [];             % 电子-电子库仑碰撞频率 [Hz]
 
-parameters.factors.mode   = [];             % 控制开关: 0 关; 1 开
+% parameters.factors.mode   = [];             % 控制开关: 0 关; 1 开
 
 %% 等离子体参数
 parameters.plasmas = struct;
