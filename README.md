@@ -23,6 +23,7 @@ Washy 2020-05-01
   - `factors.nu`：与中性成分的碰撞频率，单位Hz，一维数组，`[nuen, nuin]`，第1个参数为电子碰撞频率，第2-end参数为离子碰撞频率。例：`factors.nu = [0, 0];` 或 `factors.nu = [0, 0, 0];` 
   - `factors.B`：地磁场参数，一维数组，单位T，`[B0, alpha]`，第1个参数为地磁场磁感应强度，第二个参数为散射差矢与磁场的夹角，`alpha = 90`表示垂直于地磁场。例：`factors.B = [3.5e-5, 60];` 
   - `factors.mode`：模式控制，1×4数组，0：关，1：开，从前至后依次控制`ud`，`nu`，`B`以及库仑碰撞的开关。例：`factors.mode = [0, 0, 0, 0];` 
+  - `factors.gordmode`：Gordeyev积分模式选择，1：Sommerfeld积分求解，2：Bessel函数展开式求解。例：`factors.gordmode = 1;` 
   - `factors.theomode`：理论公式选择，1：使用Kudeki&Milla（2006,2011）公式；2：使用Farley等公式。
 
 主函数调用方法：
