@@ -66,7 +66,7 @@ if gordmode == 1 % SommerfeldIntegral
     
     Ji = complex(zeros(size(thetai)));
     for ini=1:size(thetai,1)
-        Ji(ini,:) = gordeyevSommerfeld(thetai,psiin(ini),alpha,phii(ini),psiic(ini), psiic(ini));
+        Ji(ini,:) = gordeyevSommerfeld(thetai(ini,:),psiin(ini),alpha,phii(ini),psiic(ini), psiic(ini));
     end
     
 elseif gordmode == 2 % BesselFunction
@@ -75,7 +75,7 @@ elseif gordmode == 2 % BesselFunction
     
     Ji = complex(zeros(size(thetai)));
     for ini=1:size(thetai,1)
-        Ji(ini,:) = gordeyevBessel(thetai,psiin(ini),alpha,phii(ini),128);
+        Ji(ini,:) = gordeyevBessel(thetai(ini,:),psiin(ini),alpha,phii(ini),128);
     end
     
 else
