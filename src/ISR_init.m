@@ -52,6 +52,8 @@ parameters.factors.nuei   = [];             % 电子-离子库仑碰撞频率 [Hz]
 parameters.factors.nuee   = [];             % 电子-电子库仑碰撞频率 [Hz]
 
 % parameters.factors.mode   = [];             % 控制开关: 0 关; 1 开
+parameters.factors.gordmode = [];           % gordeyev积分: 1: Sommerfeld; 2: Bessel
+parameters.factors.theomode = [];           % 理论谱计算公式: 1: Kudeki & Milla; 2: Farley et al.
 
 %% 等离子体参数
 parameters.plasmas = struct;
@@ -91,25 +93,28 @@ parameters.plasmas.omegai = [];             % 离子多普勒频率 [rad*Hz]
 parameters.dimensionless = struct;
 
 parameters.dimensionless.thetae     = [];   % 电子无量纲自变量
+parameters.dimensionless.thetai     = [];   % 离子无量纲自变量
+
 parameters.dimensionless.psien      = [];   % 电子-中性无量纲碰撞频率
+parameters.dimensionless.psiin      = [];   % 离子-中性无量纲碰撞频率
+
 parameters.dimensionless.phie       = [];   % 电子无量纲回旋频率
+parameters.dimensionless.phii       = [];   % 离子无量纲回旋频率
+
 parameters.dimensionless.psiec_par  = [];   % 电子无量纲库仑碰撞频率(平行)
 parameters.dimensionless.psiec_perp = [];   % 电子无量纲库仑碰撞频率(垂直)
-% parameters.dimensionless.He         = [];   % 电子无量纲
-
-parameters.dimensionless.thetai     = [];   % 离子无量纲自变量
-parameters.dimensionless.psiin      = [];   % 离子-中性无量纲碰撞频率
-parameters.dimensionless.phii       = [];   % 离子无量纲回旋频率
 parameters.dimensionless.psiic      = [];   % 离子无量纲库仑碰撞频率
+
+% parameters.dimensionless.He         = [];   % 电子无量纲
 % parameters.dimensionless.Hi         = [];   % 离子无量纲
 
 %% 理论谱参量
 parameters.spectrum = struct;
 
 parameters.spectrum.Je    = [];             % 电子Gordeyev积分
-parameters.spectrum.spece = [];             % 电子散射谱
-
 parameters.spectrum.Ji    = [];             % 离子Gordeyev积分
+
+parameters.spectrum.spece = [];             % 电子散射谱
 parameters.spectrum.speci = [];             % 离子散射谱
 
 end

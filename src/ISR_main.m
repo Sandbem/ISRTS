@@ -45,7 +45,7 @@ validateattributes(fradar,{'double'},{'real','>',0})
 parameters = ISR_init(ion,ne,Ti,Tr,percent,frequency,fradar,theta);
 
 %% 额外因素
-[parameters, mode, gordmode, theomode] = ISR_updateFactors(parameters,factors);
+[parameters, mode] = ISR_updateFactors(parameters,factors);
 
 %% 等离子体参数
 parameters = ISR_updatePlasmas(parameters);
@@ -54,15 +54,15 @@ parameters = ISR_updatePlasmas(parameters);
 parameters = ISR_updateDimensionless(parameters);
 
 %% Gordeyev积分
-parameters = ISR_gordeyev(parameters,mode,gordmode);
+parameters = ISR_gordeyev(parameters,mode);
 
 %% 理论谱
-if theomode == 1 % K&M
+if parameters.factors.theomode == 1 % K&M
     [spec,parameters] = ISR_spectrumKM(parameters);
-elseif theomode == 2 % Mac
+elseif parameters.factors.theomode == 2 % Mac
     [spec,parameters] = ISR_spectrumMac(parameters);
 else
-    error('参数 theomode 设置错误!')
+    error('参数 factors.theomode 设置错误!')
 end
 
 end

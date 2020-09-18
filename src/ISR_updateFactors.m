@@ -37,7 +37,7 @@
 % 2. 去除输出: gordmode (重新添加05/08)
 %%----------------------------------------------------------------------%%
 
-function [parameters, mode, gordmode, theomode] = ISR_updateFactors(parameters,factors)
+function [parameters, mode] = ISR_updateFactors(parameters,factors)
 
 leni = length(parameters.plasmas.namei);
 
@@ -78,11 +78,12 @@ if isfield(factors,'mode')
     
     % 库仑碰撞频率
     if mode(4)
-        [parameters.factors.nuii, parameters.factors.nuei, ...
-            parameters.factors.nuee] = ...
-            CollisionCoulomb(parameters.plasmas.namei, ...
-            parameters.plasmas.Ti, parameters.plasmas.Te, ...
-            parameters.plasmas.ni, parameters.plasmas.ne);
+        [nue, parameters.factors.nuii] = ...
+            CollisionCoulomb([parameters.plasmas.ne, parameters.plasmas.ni],...
+            [parameters.plasmas.Te, parameters.plasmas.Ti], ...
+            parameters.plasmas.namei);
+        parameters.factors.nuee = nue(1);
+        parameters.factors.nuei = nue(2);
     else
         parameters.factors.nuii = zeros(1,leni);
         parameters.factors.nuei = 0;
@@ -112,17 +113,17 @@ end
 % Gordeyev积分模式选择
 if isfield(factors,'gordmode')
     validateattributes(factors.gordmode,{'double'},{'scalar','integer','>=',1,'<=',2})
-    gordmode = factors.gordmode;
+    parameters.factors.gordmode = factors.gordmode;
 else
-    gordmode = 1;
+    parameters.factors.gordmode = 1;
 end
 
 % 理论谱计算公式选择
 if isfield(factors,'theomode')
     validateattributes(factors.theomode,{'double'},{'scalar','integer','>=',1,'<=',2})
-    theomode = factors.theomode;
+    parameters.factors.theomode = factors.theomode;
 else
-    theomode = 1;
+    parameters.factors.theomode = 1;
 end
 
 end

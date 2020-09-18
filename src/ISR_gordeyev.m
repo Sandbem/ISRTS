@@ -26,7 +26,7 @@
 %INFO: 重大更新, 对函数整体进行了重构。
 %%----------------------------------------------------------------------%%
 
-function parameters = ISR_gordeyev(parameters,mode,gordmode)
+function parameters = ISR_gordeyev(parameters,mode)
 
 thetae = parameters.dimensionless.thetae;
 psien  = parameters.dimensionless.psien;
@@ -56,7 +56,7 @@ alpha      = parameters.factors.alpha*pi/180;
 phie       = parameters.dimensionless.phie;
 phii       = parameters.dimensionless.phii;
     
-if gordmode == 1 % SommerfeldIntegral
+if parameters.factors.gordmode == 1 % SommerfeldIntegral
     
     psiec_para = parameters.dimensionless.psiec_par;
     psiec_perp = parameters.dimensionless.psiec_perp;
@@ -69,17 +69,17 @@ if gordmode == 1 % SommerfeldIntegral
         Ji(ini,:) = gordeyevSommerfeld(thetai(ini,:),psiin(ini),alpha,phii(ini),psiic(ini), psiic(ini));
     end
     
-elseif gordmode == 2 % BesselFunction
+elseif parameters.factors.gordmode == 2 % BesselFunction
     
-    Je = gordeyevBessel(thetae,psien,alpha,phie,128);
+    Je = gordeyevBessel(thetae,psien,alpha,phie,8);
     
     Ji = complex(zeros(size(thetai)));
     for ini=1:size(thetai,1)
-        Ji(ini,:) = gordeyevBessel(thetai(ini,:),psiin(ini),alpha,phii(ini),128);
+        Ji(ini,:) = gordeyevBessel(thetai(ini,:),psiin(ini),alpha,phii(ini),64);
     end
     
 else
-    error('参数 gordmode 设置错误!')
+    error('参数 factors.gordmode 设置错误!')
 end
 
 parameters.spectrum.Je = Je;
