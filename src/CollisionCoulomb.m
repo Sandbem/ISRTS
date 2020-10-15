@@ -39,6 +39,10 @@
 % 2. 修改输出为: varargout 根据 mode 自动调整
 %   (原为: nuii, nuei, nuee)
 %%----------------------------------------------------------------------%%
+%更新内容[2020/10/15]
+%INFO: 修复了nuii计算错误的问题。第123行nust计算过程中，需要对先对ni(:,ia)
+%   进行reshape，再计算。
+%%----------------------------------------------------------------------%%
 %输入示例[2020/08/03]
 % ne = 1e10;
 % ni = [0.5 0.2 0.3]*ne;
@@ -114,7 +118,7 @@ if ismember(mode, [mode_i, mode_e_i])
 %         nuii(iTi, ia) = sum(nust, 2);
 %     end
     nust = repmat(reshape(Bst(ib, ib),1,lenib,lenib), lenTi, 1, 1)...
-        .*repmat(ni(:,ia), 1, 1, lenia)./repmat(Ti.^1.5, 1, lenia, lenia);
+        .*repmat(reshape(ni(:,ia), lenTi, 1, lenia), 1, lenia, 1)./repmat(Ti.^1.5, 1, lenia, lenia);
     nuii(:, ia) = sum(nust, 3);
 
     % 输出
