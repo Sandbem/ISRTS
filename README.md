@@ -2,6 +2,8 @@
 
 Washy 2020-05-01
 
+Theoretical Spectrum of *Incoherent Scatter Radar* (ISR)
+
 ## 功能
 
 - 计算非相干散射理论谱：多种离子成分、漂移、碰撞、磁场
