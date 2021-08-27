@@ -2,9 +2,10 @@
 
 Washy 2020-05-01
 
-## 功能
+## 简介
 
-- 计算非相干散射理论谱：多种离子成分、漂移、碰撞、磁场
+- 全称：Incoherent Scattering Radar Theorical Spectrum
+- 功能：计算**多种离子成分**、**漂移**、**碰撞**、**磁场**条件下的非相干散射理论谱
 
 ## 如何使用
 
@@ -12,8 +13,8 @@ Washy 2020-05-01
 
 - `ion`：离子成分，元胞数组。例：`ion = {'O+'};`或`ion = {'O+','H+'};` 
 - `ne`：电子数密度，单位$m^{-3}$。例：`ne = 5e10;` 
-- `Ti`：离子温度，单位$K$。例：`K = 1000;` 
-- `Tr`：电子离子温度比，$Tr = T_e/T_i$。例：`Tr = 1;` 
+- `Te`：电子温度，单位$K$。例：`Te=1000;` 
+- `Ti`：离子温度，单位$K$。例：`Ti = 1000;`  
 - `percent`：离子各成分比例，行向量，需要和`ion`的长度相同且各项之和为1。例：`percent = 1;`或`percent = [0.8, 0.2];` 
 - `frequency`：多普勒频率，单位Hz。例：`frequency = linspace(-100e3, 100e3, 1000);` 
 - `fradar`：雷达频率，单位Hz。例：`fradar = 440e6;` 
@@ -30,10 +31,10 @@ Washy 2020-05-01
 
 设定好以上各参数之后，使用语句：
 
-`[spec,parameters]=ISR_main(ion,ne,Ti,Tr,percent,frequency,fradar,theta);` 
+`[spec,parameters]=ISR_main(ion,ne,Te,Ti,percent,frequency,fradar,theta);` 
 
 或
 
-`[spec,parameters]=ISR_main(ion,ne,Ti,Tr,percent,frequency,fradar,theta,factors);` 
+`[spec,parameters]=ISR_main(ion,ne,Te,Ti,percent,frequency,fradar,theta,factors);` 
 
 参数`factors`不输入时，使用默认设置，即不考虑factors中的所有参数影响。

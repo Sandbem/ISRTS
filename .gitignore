@@ -107,3 +107,4 @@ venv.bak/
 *.asv
 test
 doc
+dist

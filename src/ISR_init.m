@@ -3,9 +3,14 @@
 % Needs: constants.m; analysisIon.m; 
 %%----------------------------------------------------------------------%%
 % Inputs:
+%   ion         - 离子成分 cell
+%   ne          - 电子数密度 [m^-3]
+%   Te          - 电子温度 [K]
+%   Ti          - 离子温度 [K]
+%   percent     - 离子成分比例
 %   frequency   - 频率范围 [Hz]
 %   fradar      - 雷达频率 [Hz]
-%   theta       - 散射角 [°]
+%   theta_s     - 散射角 [°]
 % Output:
 %   parameters  - 计算过程产生的中间变量 struct
 %%----------------------------------------------------------------------%%
@@ -18,8 +23,12 @@
 %%更新内容[Washy 2020/05/01]
 % 1. 增加输入: ion, ne, Ti, Tr, percent
 %%----------------------------------------------------------------------%%
+%%更新内容[Washy 2021/04/02]
+% 1. 修改变量: 将Tr改为Te
+% 2. 调换顺序: 将Ti放在Te后面
+%%----------------------------------------------------------------------%%
 
-function parameters = ISR_init(ion,ne,Ti,Tr,percent,frequency,fradar,theta_s)
+function parameters = ISR_init(ion,ne,Te,Ti,percent,frequency,fradar,theta_s)
 
 res = constants({'c','me','e'});
 
@@ -64,7 +73,7 @@ parameters.plasmas.me     = res.me;         % 电子质量 [kg]
 parameters.plasmas.qe     = res.e;          % 电子电荷量 [C]
 
 parameters.plasmas.ne     = ne;             % 电子数密度 [m^-3]
-parameters.plasmas.Te     = Ti*Tr;          % 电子温度 [K]
+parameters.plasmas.Te     = Te;             % 电子温度 [K]
 
 parameters.plasmas.vTe    = [];             % 电子热速度 [m/s]
 parameters.plasmas.wpe    = [];             % 电子等离子体频率 [Hz]

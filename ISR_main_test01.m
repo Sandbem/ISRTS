@@ -1,12 +1,12 @@
-%%INFO: ²âÊÔISR_main
+%%INFO: ï¿½ï¿½ï¿½ï¿½ISR_main
 % date: 2020-05-01 Washy
 
 clear;
 
 ion = {'O+', 'NO+'};
 ne = 5e10;
+Te = 1000;
 Ti = 1000;
-Tr = 1;
 percent = [0.7 0.3];
 
 lfre = 1000;
@@ -23,7 +23,7 @@ factors.mode = [0, 0, 1, 0];
 factors.gordmode = 1;
 factors.theomode = 2;
 
-[spec,parameters]=ISR_main(ion,ne,Ti,Tr,percent,frequency,fradar,theta,factors);
+[spec,parameters]=ISR_main(ion,ne,Te,Ti,percent,frequency,fradar,theta,factors);
 
 %%
 figure;

@@ -7,8 +7,8 @@
 % Inputs:
 %   ion         - 离子成分 cell
 %   ne          - 电子数密度 [m^-3]
+%   Te          - 电子温度 [K]
 %   Ti          - 离子温度 [K]
-%   Tr          - 电子离子温度比
 %   percent     - 离子成分比例
 %   frequency   - 频率范围 [Hz]
 %   fradar      - 雷达频率 [Hz]
@@ -20,8 +20,12 @@
 % author: Washy[IGG]
 % date: 2019/10/09,30
 %%----------------------------------------------------------------------%%
+%%更新内容[Washy 2021/04/02]
+% 1. 修改变量: 将Tr改为Te
+% 2. 调换顺序: 将Ti放在Te后面
+%%----------------------------------------------------------------------%%
 
-function [spec,parameters]=ISR_main(ion,ne,Ti,Tr,percent,frequency,fradar,theta,factors)
+function [spec,parameters]=ISR_main(ion,ne,Te,Ti,percent,frequency,fradar,theta,factors)
 %% 输入检查
 if nargin == 8
     factors = struct;
@@ -35,14 +39,14 @@ end
 
 validateattributes(ion,{'cell'},{'row'})
 validateattributes(ne,{'double'},{'real','>',0})
+validateattributes(Te,{'double'},{'real','>',0})
 validateattributes(Ti,{'double'},{'real','>',0})
-validateattributes(Tr,{'double'},{'real','>',0})
 validateattributes(percent,{'double'},{'row','>=',0,'<=',1})
 validateattributes(frequency,{'double'},{'row','real'})
 validateattributes(fradar,{'double'},{'real','>',0})
 
 %% 初始化parameters
-parameters = ISR_init(ion,ne,Ti,Tr,percent,frequency,fradar,theta);
+parameters = ISR_init(ion,ne,Te,Ti,percent,frequency,fradar,theta);
 
 %% 额外因素
 [parameters, mode] = ISR_updateFactors(parameters,factors);
